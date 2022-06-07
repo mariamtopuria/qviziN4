@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+
+{% block navbar %}
+{{ super() }}
+
+
+{% for i in all %}
+<h3>{{ i }}</h3>
+{% endfor %}
+
+{% endblock  %}

@@ -1,14 +1,19 @@
-import json
-
+url = 'https://www.lit.ge/index.php?page=books&send[shop.catalog][page]=1'
 import requests
+from bs4 import BeautifulSoup
+file = open('books.csv', 'w', encoding='utf-8_sig')
+file.write("სათაური" + ',' + "ავტორი" + ',' + "ფასი" + '\n')
+url = 'https://www.lit.ge/index.php?page=books&send[shop.catalog][page]=1'
+r = requests.get(url)
+soup = BeautifulSoup(r.text, 'html.parser')
+section = soup.find('section', class_='list-holder')
+books = section.find_all('article')
+for book in books:
+    title_bar = book.find('div', class_='title-bar')
+    book_name = title_bar.a.text
+    author = title_bar.b.a.text
+    desc = book.p.text
+    price = book.button.text.strip()
+    file.write(book_name + ',' + author + ',' + price + '\n')
 
-key= 'WjINODGkH4GcOUoCWrEfTawclVU0y2uYiM8LIsVXVefiUAxOt33RYgXWc27f'
-payload={'api_token':'WjINODGkH4GcOUoCWrEfTawclVU0y2uYiM8LIsVXVefiUAxOt33RYgXWc27f', 'include':'country' }
-r=requests.get('https://soccer.sportmonks.com/api/v2.0/leagues/271', params=payload)
-
-# print(r.text)
-
-res= json.loads(r.text)
-
-print(res)
-print(json.dumps(res, indent=4))
+file.close()
